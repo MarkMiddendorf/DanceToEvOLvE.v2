@@ -89,5 +89,5 @@ st.session_state["select_all_filters"] = False
 filtered_df = get_filtered_df(df, selected_filters)
 
 st.session_state['filtered_df'] = filtered_df
-#st.write("Session State Snapshot:", st.session_state)
+st.write("Session State Snapshot:", st.session_state)
 
