@@ -13,7 +13,7 @@ from streamlit import cache_data
 
 st.set_page_config(page_title="Dance Filters", layout="wide")
 apply_global_styles()
-init_session_state()
+#init_session_state()
 
 logo = Image.open("assets/danceLogo.png")
 
