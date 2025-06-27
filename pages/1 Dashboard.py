@@ -18,7 +18,7 @@ with col2:
 
 def main():
     apply_global_styles() 
-    #init_session_state()
+    init_session_state()
     st.write("Session State Snapshot:", st.session_state)
     
     # Display view
