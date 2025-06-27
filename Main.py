@@ -8,10 +8,12 @@ from utils.filters import render_persistent_filters
 from utils.display import apply_display_toggle
 from utils.helpers import school_year
 from utils.helpers import calculate_age
+from utils.state import init_session_state
 from streamlit import cache_data
 
 st.set_page_config(page_title="Dance Filters", layout="wide")
 apply_global_styles()
+init_session_state()
 
 logo = Image.open("assets/danceLogo.png")
 
@@ -51,21 +53,41 @@ df['Year_Season_Session'] = df['School Year String'] + ' ' + df['Season'] + ' ' 
 
 st.session_state['df'] = df
 
-if st.button("🔄 Reset Filters"):
-    for key in list(st.session_state.keys()):
-        if "-multiselect" in key:
-            del st.session_state[key]
-    del st.session_state["selected_filters"]
-    st.experimental_rerun()
+# Initialize reset/select-all flags if not present
+if "reset_filters" not in st.session_state:
+    st.session_state.reset_filters = False
+if "select_all_filters" not in st.session_state:
+    st.session_state.select_all_filters = False
+
+# Two-button layout
+col1, col2 = st.columns(2)
+with col1:
+    if st.button("🔄 Clear Filters"):
+        st.session_state.reset_filters = True
+with col2:
+    if st.button("✅ Select All Filters"):
+        st.session_state.select_all_filters = True
+
+
 
 
 # Display toggle
+# Ensure the display toggle is initialized before Streamlit renders the radio
+if "display_toggle" not in st.session_state:
+    st.session_state["display_toggle"] = "School Year / School Year"
 df, display_toggle = apply_display_toggle(df)
 
 # Render persistent filters
 selected_filters = render_persistent_filters(df)
 
+# Clear flags after use
+st.session_state["reset_filters"] = False
+st.session_state["select_all_filters"] = False
+
+
 # Apply filters to DataFrame
 filtered_df = get_filtered_df(df, selected_filters)
 
 st.session_state['filtered_df'] = filtered_df
+#st.write("Session State Snapshot:", st.session_state)
+

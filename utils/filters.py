@@ -2,23 +2,73 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-def select_all_option_expander(label, options, sort_order=None, default=None, key=None):
-    """Render a multiselect widget with sorted options and persistent session state."""
+def select_all_option_expander(label, options, sort_order=None, key=None):
+    import numpy as np
+
     if key is None:
         key = f"{label}-multiselect"
 
-    # Sort options if specified
+    # Sort options
     if sort_order == 'alphabetical':
         options = sorted(options)
     elif sort_order == 'numerical':
-        options = sorted(options, key=lambda x: float(x) if str(x).replace('.', '', 1).isdigit() else float('inf'))
+        options = sorted(
+            options,
+            key=lambda x: float(x) if str(x).replace('.', '', 1).isdigit() else float('inf')
+        )
 
-    # Ensure default is a list and contains only valid options
-    default = [val for val in (default or []) if val in options]
+    # Ensure options is always a list
+    options = list(options)
 
-    # Render multiselect with session state key
-    selected = st.multiselect(f"Select {label}:", options, default=default, key=key, format_func=str)
+        # On reset: clear filter
+    if st.session_state.get("reset_filters"):
+        st.session_state[key] = []
+
+    # On select-all: set to full options
+    elif st.session_state.get("select_all_filters"):
+        st.session_state[key] = options
+
+    # First-time setup: use full list
+    elif key not in st.session_state:
+        st.session_state[key] = options
+
+    # Cleanup invalid values from previous state (e.g. if options changed)
+    else:
+        if isinstance(st.session_state[key], np.ndarray):
+            st.session_state[key] = st.session_state[key].tolist()
+        st.session_state[key] = [val for val in st.session_state[key] if val in options]
+
+    # Render widget using value from session
+    return st.multiselect(f"Select {label}:", options, default=st.session_state[key], key=key)
+
+    # --- Normalize any existing session state values to lists ---
+    existing_val = st.session_state.get(key, [])
+    if isinstance(existing_val, np.ndarray):
+        existing_val = existing_val.tolist()
+    elif not isinstance(existing_val, list):
+        existing_val = list(existing_val)
+
+    # --- Handle reset / select all flags ---
+    if st.session_state.get("reset_filters"):
+        st.session_state[key] = []
+    elif st.session_state.get("select_all_filters"):
+        st.session_state[key] = options
+    else:
+        # Use only valid entries
+        st.session_state[key] = [val for val in existing_val if val in options]
+
+    # Render widget
+    selected = st.multiselect(
+        f"Select {label}:",
+        options,
+        default=list(st.session_state[key]),  # ensure this is always a list
+        key=key
+    )
+
     return selected
+
+
+
 
 def get_or_init_session_state(key, default_values):
     """Initialize or retrieve session state for a given key."""
@@ -52,6 +102,9 @@ def get_camps_filtered_df(df):
 
 def render_persistent_filters(df):
     """Render filters with persistent session state across pages."""
+    if "select_all_filters" not in st.session_state:
+        st.session_state.select_all_filters = False
+
     # Convert Age to numeric for sorting
     df['Age'] = pd.to_numeric(df['Age'], errors='coerce').fillna(0).astype(float)
 
@@ -79,7 +132,8 @@ def render_persistent_filters(df):
         selected_filters['school_years'] = select_all_option_expander(
             'School Year',
             df['School Year'].unique(),
-            default=selected_filters['school_years'],
+            sort_order='Numerical',
+            #default=selected_filters['school_years'],
             key='School Year-multiselect'
         )
 
@@ -87,7 +141,8 @@ def render_persistent_filters(df):
         selected_filters['seasons'] = select_all_option_expander(
             'Season',
             df['Season'].unique(),
-            default=selected_filters['seasons'],
+            sort_order='alphabetical',
+            #default=selected_filters['seasons'],
             key='Season-multiselect'
         )
 
@@ -95,7 +150,8 @@ def render_persistent_filters(df):
         selected_filters['sessions'] = select_all_option_expander(
             'Session',
             df['Session'].unique(),
-            default=selected_filters['sessions'],
+            sort_order='numerical',
+            #default=selected_filters['sessions'],
             key='Session-multiselect'
         )
 
@@ -108,7 +164,7 @@ def render_persistent_filters(df):
             'City',
             df['City'].unique(),
             sort_order='alphabetical',
-            default=selected_filters['cities'],
+            #default=selected_filters['cities'],
             key='City-multiselect'
         )
 
@@ -118,7 +174,7 @@ def render_persistent_filters(df):
             'Location',
             filtered_locations,
             sort_order='alphabetical',
-            default=selected_filters['locations'],
+            #default=selected_filters['locations'],
             key='Location-multiselect'
         )
 
@@ -127,7 +183,7 @@ def render_persistent_filters(df):
             'Reg/NonReg',
             df['Reg/NonReg'].unique(),
             sort_order='alphabetical',
-            default=selected_filters['reg_nonreg'],
+            #default=selected_filters['reg_nonreg'],
             key='Reg/NonReg-multiselect'
         )
 
@@ -137,7 +193,7 @@ def render_persistent_filters(df):
             'Class',
             df['Class'].unique(),
             sort_order='alphabetical',
-            default=selected_filters['classes'],
+            #default=selected_filters['classes'],
             key='Class-multiselect'
         )
 
@@ -147,7 +203,7 @@ def render_persistent_filters(df):
             'Age',
             df['Age'].unique(),
             sort_order='numerical',
-            default=selected_filters['ages'],
+            #default=selected_filters['ages'],
             key='Age-multiselect'
         )
 
@@ -156,7 +212,7 @@ def render_persistent_filters(df):
             'Teacher',
             df['Teacher'].unique(),
             sort_order='alphabetical',
-            default=selected_filters['teachers'],
+            #default=selected_filters['teachers'],
             key='Teacher-multiselect'
         )
 
@@ -165,7 +221,7 @@ def render_persistent_filters(df):
             'Day',
             df['Day'].unique(),
             sort_order='alphabetical',
-            default=selected_filters['days'],
+            #default=selected_filters['days'],
             key='Day-multiselect'
         )
 
@@ -174,7 +230,7 @@ def render_persistent_filters(df):
             'Time',
             df['Time'].unique(),
             sort_order='alphabetical',
-            default=selected_filters['times'],
+            #default=selected_filters['times'],
             key='Time-multiselect'
         )
 

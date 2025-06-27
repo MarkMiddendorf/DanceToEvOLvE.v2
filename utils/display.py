@@ -2,11 +2,18 @@ import streamlit as st
 import plotly.graph_objects as go
 
 def apply_display_toggle(df):
-    # Use a key to bind the radio input to session_state
+
+    options = ["School Year / School Year", "Intra Year", "Session (Consecutive)"]
+
+    # Use session state value if it exists, else default to first option
+    default_option = st.session_state.get("display_toggle", options[0])
+    default_index = options.index(default_option) if default_option in options else 0
+    
     display_toggle = st.radio(
         "Display",
-        options=["School Year / School Year", "Intra Year", "Session (Consecutive)"],
-        key="display_toggle",  # this ensures the value persists
+        options=options,
+        index=default_index,
+        key="display_toggle"
     )
 
     # Access the persisted selection

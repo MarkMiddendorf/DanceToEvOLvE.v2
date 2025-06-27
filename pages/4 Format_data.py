@@ -7,6 +7,10 @@ from utils.styling import apply_global_styles
 
 def main():
     apply_global_styles()  # if no logo injection needed
+    # Display view
+    display_toggle = st.session_state["display_toggle"]
+    st.session_state['display_toggle'] = display_toggle
+
     st.title("🧹 Format Data")
     def extract_info_from_filename(filename):
         file_name = os.path.basename(filename)

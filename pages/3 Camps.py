@@ -2,9 +2,16 @@ import streamlit as st
 import pandas as pd
 from utils.styling import apply_global_styles
 from utils.filters import get_camps_filtered_df
+from utils.state import init_session_state
 
 def main():
     apply_global_styles() 
+    #init_session_state()
+    # Display view
+    display_toggle = st.session_state["display_toggle"]
+    st.session_state['display_toggle'] = display_toggle
+
+    #st.write("Session State Snapshot:", st.session_state)
         # Simulate loading the master df again here or store it globally
     if 'df' not in st.session_state:
         st.error("Master dataframe not loaded. Please return to Main page first.")

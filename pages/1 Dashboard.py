@@ -5,6 +5,7 @@ from utils.styling import apply_global_styles
 from PIL import Image
 from utils.display import metric_card
 from utils.display import plot_individual_metric
+from utils.state import init_session_state
 
 
 logo = Image.open("assets/danceLogo.png")
@@ -17,8 +18,14 @@ with col2:
 
 def main():
     apply_global_styles() 
-    display_toggle = st.session_state.get("display_toggle", "School Year / School Year")
+    #init_session_state()
+    #st.write("Session State Snapshot:", st.session_state)
+    
+    # Display view
+    display_toggle = st.session_state["display_toggle"]
     st.header(display_toggle)
+    st.session_state['display_toggle'] = display_toggle
+
 
     if 'filtered_df' in st.session_state:
         filtered_df = st.session_state['filtered_df']
@@ -173,6 +180,7 @@ def main():
             metric_card("Enrollment Ratio (Total Dancers / Total Classes)", f"{enrollment_ratio:.2f}")
         with col2:
             metric_card("Slots Attended (Total Dancers / Total Unique Dancers)", f"{average_slots_attended:.2f}")
+        metric_card("Total Number of Classes", f"{num_classes}")
 
         # Plot Enrollment Ratio
         fig = plot_individual_metric(
