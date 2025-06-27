@@ -6,7 +6,7 @@ from utils.state import init_session_state
 
 def main():
     apply_global_styles() 
-    #init_session_state()
+    init_session_state()
     # Display view
     display_toggle = st.session_state["display_toggle"]
     st.session_state['display_toggle'] = display_toggle
