@@ -3,3 +3,5 @@ google-auth==2.40.3
 pandas==2.2.3
 plotly==5.22.0
 streamlit==1.32.0
+openpyxl
+pyarrow==14.0.2
