@@ -74,7 +74,7 @@ with col2:
 # Display toggle
 # Ensure the display toggle is initialized before Streamlit renders the radio
 if "display_toggle" not in st.session_state:
-    st.session_state["display_toggle"] = "School Year / School Year"
+    st.session_state["display_toggle"] = "All Time"
 df, display_toggle = apply_display_toggle(df)
 
 # Render persistent filters

@@ -5,8 +5,10 @@ from datetime import datetime
 def compute_school_year(df):
     df = df.copy()
     school_year_order = [
-        ('Fall', 1), ('Fall', 2), ('Winter', 1), ('Winter', 2),
-        ('Spring', 1), ('Spring', 2), ('Summer', 1), ('Summer', 2), ('Camp', 3)
+        ('Fall', 1), ('Fall', 2), 
+        ('Winter', 1), ('Winter', 2),
+        ('Spring', 1), ('Spring', 2), 
+        ('Summer', 1), ('Summer', 2), ('Camp', 3)
     ]
     school_year_mapping = {}
     school_year_string_mapping = {}
@@ -55,6 +57,7 @@ def calculate_age(df):
         ('Spring', 1): (4, 1),  # April 1
         ('Spring', 2): (5, 1),  # May 1
         ('Summer', 1): (6, 1),  # June 1
+        ('Camp', 3): (6,1),     # June 1
         ('Summer', 2): (7, 1)   # July 1
     }
 

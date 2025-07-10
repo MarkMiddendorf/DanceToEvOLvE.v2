@@ -72,15 +72,11 @@ def main():
             else:
                 last = last_seen[dancer_id]
 
-                if display_toggle == "School Year / School Year":
-                    # If they were last seen in year Y-1 → NOT new
-                    if last['school_year'] == school_year - 1:
-                        is_new = False
-                    # If last seen was before Y-1 → NEW
-                    elif last['school_year'] < school_year - 1:
+                if display_toggle == "All Time":
+                    # If they were never seen before = new
+                    if last is None:
                         is_new = True
-                    # If already seen earlier in current year → NOT new
-                    elif last['school_year'] == school_year:
+                    else:
                         is_new = False
 
                 elif display_toggle == "Intra Year":

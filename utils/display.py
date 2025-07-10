@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 
 def apply_display_toggle(df):
 
-    options = ["School Year / School Year", "Intra Year", "Session (Consecutive)"]
+    options = ["All Time", "Intra Year", "Session (Consecutive)"]
 
     # Use session state value if it exists, else default to first option
     default_option = st.session_state.get("display_toggle", options[0])
@@ -19,7 +19,7 @@ def apply_display_toggle(df):
     # Access the persisted selection
     toggle_value = st.session_state["display_toggle"]
 
-    if toggle_value == "School Year / School Year":
+    if toggle_value == "All Time":
         df["x_axisLabel"] = df["School Year String"]
         df["Sort_Key"] = df["School Year"]
     else:
