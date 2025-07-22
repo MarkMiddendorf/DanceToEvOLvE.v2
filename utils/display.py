@@ -114,7 +114,7 @@ def plot_individual_metric(df, x_axis_label='x_axisLabel', metric='Number of Dan
             x=row[x_axis_label],
             y=row[metric], #if not as_percentage else (row[metric] / base_metric_df[base_metric_df[x_axis_label] == row[x_axis_label]][base_metric].iloc[0] * 100) if as_percentage else 0,
             #text=str(round(row[metric], 1)) if not as_percentage else f"{round((row[metric] / base_metric_df[base_metric_df[x_axis_label] == row[x_axis_label]][base_metric].iloc[0] * 100), 1)}%",
-            text = f"{round(row[metric], 1)}%" if as_percentage else str(round(row[metric], 1)),
+            text = f"{int(round(row[metric]))}%" if as_percentage else str(round(row[metric])),
             showarrow=False,
             xanchor='left',
             yanchor='middle',

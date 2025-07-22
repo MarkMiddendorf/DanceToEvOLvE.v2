@@ -162,7 +162,7 @@ def main():
             on='x_axisLabel',
             how='left'
         )
-        enrollment_df['Enrollment %'] = enrollment_df['Number of Dancers'] / enrollment_df['Number of Classes']
+        enrollment_df['Enrollment %'] = enrollment_df['Number of Dancers'] / enrollment_df['Number of Classes'].astype(int)
 
         #st.write(enrollment_df)
 
@@ -173,11 +173,24 @@ def main():
         # 4. Display as metric cards using Markdown
         col1, col2 = st.columns(2)
         with col1:
-            metric_card("Enrollment Ratio (Total Dancers / Total Classes)", f"{enrollment_ratio:.2f}")
+            metric_card("Enrollment Ratio (Total Dancers / Total Classes)", f"{enrollment_ratio:.0f}")
         with col2:
-            metric_card("Slots Attended (Total Dancers / Total Unique Dancers)", f"{average_slots_attended:.2f}")
+            metric_card("Slots Attended (Total Dancers / Total Unique Dancers)", f"{average_slots_attended:.0f}")
         metric_card("Total Number of Classes", f"{num_classes}")
 
+        # Plot Enrollment Ratio
+        fig = plot_individual_metric(
+            df=enrollment_df,
+            x_axis_label='x_axisLabel',
+            metric='Number of Classes',
+            base_metric_df = None,
+            base_metric = None,
+            title='Number of Classes',
+            as_percentage= False,
+            trace_color='aqua'
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
         # Plot Enrollment Ratio
         fig = plot_individual_metric(
             df=enrollment_df,
@@ -186,7 +199,7 @@ def main():
             base_metric_df = None,
             base_metric = None,
             title='Enrollment Ratio',
-            as_percentage=True,
+            as_percentage=False,
             trace_color='lightgreen'
         )
         st.plotly_chart(fig, use_container_width=True)
