@@ -3,12 +3,10 @@ import pandas as pd
 import numpy as np
 
 def select_all_option_expander(label, options, sort_order=None, key=None):
-    import numpy as np
+    
+    # Normalize key used inside selected_filters
+    key = label.lower().replace(" ", "_")
 
-    if key is None:
-        key = f"{label}-multiselect"
-
-    # Sort options
     if sort_order == 'alphabetical':
         options = sorted(options)
     elif sort_order == 'numerical':
@@ -17,55 +15,34 @@ def select_all_option_expander(label, options, sort_order=None, key=None):
             key=lambda x: float(x) if str(x).replace('.', '', 1).isdigit() else float('inf')
         )
 
-    # Ensure options is always a list
     options = list(options)
 
-        # On reset: clear filter
+    # Initialize selected_filters dict
+    if "selected_filters" not in st.session_state:
+        st.session_state["selected_filters"] = {}
+
+    # Reset / Select All / Default logic
     if st.session_state.get("reset_filters"):
-        st.session_state[key] = []
-
-    # On select-all: set to full options
+        st.session_state["selected_filters"][key] = []
     elif st.session_state.get("select_all_filters"):
-        st.session_state[key] = options
-
-    # First-time setup: use full list
-    elif key not in st.session_state:
-        st.session_state[key] = options
-
-    # Cleanup invalid values from previous state (e.g. if options changed)
+        st.session_state["selected_filters"][key] = options
+    elif key not in st.session_state["selected_filters"]:
+        st.session_state["selected_filters"][key] = options
     else:
-        if isinstance(st.session_state[key], np.ndarray):
-            st.session_state[key] = st.session_state[key].tolist()
-        st.session_state[key] = [val for val in st.session_state[key] if val in options]
+        st.session_state["selected_filters"][key] = [
+            val for val in st.session_state["selected_filters"][key] if val in options
+        ]
 
-    # Render widget using value from session
-    return st.multiselect(f"Select {label}:", options, default=st.session_state[key], key=key)
-
-    # --- Normalize any existing session state values to lists ---
-    existing_val = st.session_state.get(key, [])
-    if isinstance(existing_val, np.ndarray):
-        existing_val = existing_val.tolist()
-    elif not isinstance(existing_val, list):
-        existing_val = list(existing_val)
-
-    # --- Handle reset / select all flags ---
-    if st.session_state.get("reset_filters"):
-        st.session_state[key] = []
-    elif st.session_state.get("select_all_filters"):
-        st.session_state[key] = options
-    else:
-        # Use only valid entries
-        st.session_state[key] = [val for val in existing_val if val in options]
-
-    # Render widget
-    selected = st.multiselect(
+    # Render the widget
+    user_selection =  st.multiselect(
         f"Select {label}:",
         options,
-        default=list(st.session_state[key]),  # ensure this is always a list
-        key=key
+        default=st.session_state["selected_filters"][key],
     )
 
-    return selected
+    st.session_state["selected_filters"][key] = user_selection
+
+    return user_selection
 
 
 
@@ -106,7 +83,7 @@ def render_persistent_filters(df):
         st.session_state.select_all_filters = False
 
     # Convert Age to numeric for sorting
-    df['Age'] = pd.to_numeric(df['Age'], errors='coerce').fillna(0).astype(float)
+    #df['Age'] = pd.to_numeric(df['Age'], errors='coerce').fillna(0).astype(float)
 
     # Initialize selected_filters in session state if not present
     if 'selected_filters' not in st.session_state:
@@ -134,7 +111,7 @@ def render_persistent_filters(df):
             df['School Year'].unique(),
             sort_order='Numerical',
             #default=selected_filters['school_years'],
-            key='School Year-multiselect'
+            #key='School Year-multiselect'
         )
 
     with col_season:
@@ -143,7 +120,7 @@ def render_persistent_filters(df):
             df['Season'].unique(),
             sort_order='alphabetical',
             #default=selected_filters['seasons'],
-            key='Season-multiselect'
+            #key='Season-multiselect'
         )
 
     with col_session:
@@ -152,7 +129,7 @@ def render_persistent_filters(df):
             df['Session'].unique(),
             sort_order='numerical',
             #default=selected_filters['sessions'],
-            key='Session-multiselect'
+            #key='Session-multiselect'
         )
 
     # --- Additional Filters ---
@@ -165,8 +142,9 @@ def render_persistent_filters(df):
             df['City'].unique(),
             sort_order='alphabetical',
             #default=selected_filters['cities'],
-            key='City-multiselect'
+            #key='City-multiselect'
         )
+    #st.session_state['City-multiselect'] = selected_filters['cities']
 
     with col_location:
         filtered_locations = df[df['City'].isin(selected_filters['cities'])]['Location'].unique()
@@ -175,7 +153,7 @@ def render_persistent_filters(df):
             filtered_locations,
             sort_order='alphabetical',
             #default=selected_filters['locations'],
-            key='Location-multiselect'
+            #key='Location-multiselect'
         )
 
     with col_reg_nonreg:
@@ -184,7 +162,7 @@ def render_persistent_filters(df):
             df['Reg/NonReg'].unique(),
             sort_order='alphabetical',
             #default=selected_filters['reg_nonreg'],
-            key='Reg/NonReg-multiselect'
+            #key='Reg/NonReg-multiselect'
         )
 
     col_class, = st.columns(1)
@@ -194,7 +172,7 @@ def render_persistent_filters(df):
             df['Class'].unique(),
             sort_order='alphabetical',
             #default=selected_filters['classes'],
-            key='Class-multiselect'
+            #key='Class-multiselect'
         )
 
     col_age, col_teacher, col_day, col_time = st.columns(4)
@@ -204,7 +182,7 @@ def render_persistent_filters(df):
             df['Age'].unique(),
             sort_order='numerical',
             #default=selected_filters['ages'],
-            key='Age-multiselect'
+            #key='Age-multiselect'
         )
 
     with col_teacher:
@@ -213,7 +191,7 @@ def render_persistent_filters(df):
             df['Teacher'].unique(),
             sort_order='alphabetical',
             #default=selected_filters['teachers'],
-            key='Teacher-multiselect'
+            #key='Teacher-multiselect'
         )
 
     with col_day:
@@ -222,7 +200,7 @@ def render_persistent_filters(df):
             df['Day'].unique(),
             sort_order='alphabetical',
             #default=selected_filters['days'],
-            key='Day-multiselect'
+            #key='Day-multiselect'
         )
 
     with col_time:
@@ -231,14 +209,14 @@ def render_persistent_filters(df):
             df['Time'].unique(),
             sort_order='alphabetical',
             #default=selected_filters['times'],
-            key='Time-multiselect'
+            #key='Time-multiselect'
         )
 
     # Update session state with the latest filter selections
     st.session_state['selected_filters'] = selected_filters
 
     # Update filtered_df in session state
-    filtered_df = get_filtered_df(df, selected_filters)
-    st.session_state['filtered_df'] = filtered_df
+    #filtered_df = get_filtered_df(df, selected_filters)
+    #st.session_state['filtered_df'] = filtered_df
 
     return selected_filters

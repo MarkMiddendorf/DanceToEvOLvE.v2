@@ -13,7 +13,8 @@ from streamlit import cache_data
 
 st.set_page_config(page_title="Dance Filters", layout="wide")
 apply_global_styles()
-#init_session_state()
+init_session_state()
+
 
 logo = Image.open("assets/danceLogo.png")
 
@@ -72,9 +73,6 @@ with col2:
 
 
 # Display toggle
-# Ensure the display toggle is initialized before Streamlit renders the radio
-if "display_toggle" not in st.session_state:
-    st.session_state["display_toggle"] = "All Time"
 df, display_toggle = apply_display_toggle(df)
 
 # Render persistent filters
@@ -89,5 +87,5 @@ st.session_state["select_all_filters"] = False
 filtered_df = get_filtered_df(df, selected_filters)
 
 st.session_state['filtered_df'] = filtered_df
-st.write("Session State Snapshot:", st.session_state)
+#st.write("Session State Snapshot:", st.session_state)
 

@@ -6,13 +6,13 @@ def apply_display_toggle(df):
     options = ["All Time", "Intra Year", "Session (Consecutive)"]
 
     # Use session state value if it exists, else default to first option
-    default_option = st.session_state.get("display_toggle", options[0])
-    default_index = options.index(default_option) if default_option in options else 0
+    #default_option = st.session_state.get("display_toggle", options[0])
+    #default_index = options.index(default_option) if default_option in options else 0
     
     display_toggle = st.radio(
         "Display",
         options=options,
-        index=default_index,
+        index=0,
         key="display_toggle"
     )
 
