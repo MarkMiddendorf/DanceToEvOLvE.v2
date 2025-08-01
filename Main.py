@@ -70,8 +70,6 @@ with col2:
 # Display toggle
 df, display_toggle = apply_display_toggle(df)
 
-st.session_state['df'] = df
-
 # Render persistent filters
 selected_filters = render_persistent_filters(df)
 

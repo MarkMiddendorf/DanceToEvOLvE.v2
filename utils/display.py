@@ -37,6 +37,8 @@ def apply_display_toggle(df):
     }
     df["Session_Index"] = df["Normalized_Label"].map(session_order)
 
+    st.session_state['df'] = df
+
     return df, toggle_value
 
 
