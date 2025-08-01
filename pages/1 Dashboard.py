@@ -49,7 +49,7 @@ def main():
         #st.write("Total Dancers: ", total_dancers)
 
         # Unique Students (unique head count) -> filtered dataframe unique count
-        unique_dancers_df = filtered_df.groupby(['School Year String', 'x_axisLabel', 'Sort_Key']).agg({'DancerID': 'nunique'}).reset_index()
+        unique_dancers_df = filtered_df.groupby(['School Year String', 'x_axisLabel', 'Sort_Key', 'Session_Index']).agg({'DancerID': 'nunique'}).reset_index()
         #st.write(unique_dancers_df)
         unique_dancers_df.rename(columns={'DancerID': 'Number of Unique Dancers'}, inplace=True)
         #st.write(unique_dancers_df)
