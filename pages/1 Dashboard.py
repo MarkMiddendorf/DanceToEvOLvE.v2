@@ -61,7 +61,7 @@ def main():
     # Brand New Students (never taken a class) -> filtered dataframe...Are all students brand new period 0?
         # 1. Sort filtered data
         filtered_pool = df.sort_values('Sort_Key')
-        st.write(filtered_pool)
+        #st.write(filtered_pool)
 
         # 2. Track last seen by Sort_Key (session-based)
         last_seen = {}
