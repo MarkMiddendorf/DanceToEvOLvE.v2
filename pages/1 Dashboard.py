@@ -23,7 +23,7 @@ def main():
     #st.write("Session State Snapshot:", st.session_state)
     
     # Display view
-    #df = st.session_state['df']
+    df = st.session_state['df']
     #df, display_toggle = apply_display_toggle(df) 
     #display_toggle = st.session_state.get("display_toggle")
     #st.session_state['display_toggle'] = display_toggle
@@ -60,7 +60,7 @@ def main():
 
     # Brand New Students (never taken a class) -> filtered dataframe...Are all students brand new period 0?
         # 1. Sort filtered data
-        filtered_pool = filtered_df.sort_values('Sort_Key')
+        filtered_pool = df.sort_values('Sort_Key')
         #st.write(filtered_pool)
 
         # 2. Track last seen by Sort_Key (session-based)
