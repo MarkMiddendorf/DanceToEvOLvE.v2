@@ -52,8 +52,6 @@ df['Season_Order'] = df['Season'].map(season_order)
 df['Sort_Key'] = df['School Year'] * 100 + df['Season_Order'] * 10 + df['Session']
 df['Year_Season_Session'] = df['School Year String'] + ' ' + df['Season'] + ' ' + df['Session'].astype(str)
 
-st.session_state['df'] = df
-
 # Initialize reset/select-all flags if not present
 if "reset_filters" not in st.session_state:
     st.session_state.reset_filters = False
@@ -71,6 +69,8 @@ with col2:
 
 # Display toggle
 df, display_toggle = apply_display_toggle(df)
+
+st.session_state['df'] = df
 
 # Render persistent filters
 selected_filters = render_persistent_filters(df)
