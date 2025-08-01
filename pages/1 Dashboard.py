@@ -117,7 +117,7 @@ def main():
 
         # 3. After loop: create DataFrame
         acquired_df = pd.DataFrame(newly_acquired)
-        #st.write("AquiredDF: ", acquired_df)
+        st.write("AquiredDF: ", acquired_df)
 
         # 4. Count new students
         new_students_df = acquired_df.groupby(['School Year String', 'x_axisLabel']).agg({'DancerID': 'nunique'}).reset_index()
