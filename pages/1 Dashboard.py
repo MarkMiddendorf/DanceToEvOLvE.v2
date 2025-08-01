@@ -23,7 +23,7 @@ def main():
     
     # Display view
     display_toggle = st.session_state["display_toggle"]
-    st.header(display_toggle)
+    #st.header(display_toggle)
     st.session_state['display_toggle'] = display_toggle
 
 
