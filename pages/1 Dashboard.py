@@ -23,7 +23,6 @@ def main():
     #st.write("Session State Snapshot:", st.session_state)
     
     # Display view
-    df = st.session_state['df']
     #df, display_toggle = apply_display_toggle(df) 
     #display_toggle = st.session_state.get("display_toggle")
     #st.session_state['display_toggle'] = display_toggle
@@ -36,6 +35,7 @@ def main():
         #display_toggle = st.session_state.get("display_toggle")
         #st.session_state['display_toggl`e'] = display_toggle
         st.header(display_toggle)
+        df = st.session_state['df']
 
         #st.write(filtered_df)  # or use it in charts, logic, etc.
 
