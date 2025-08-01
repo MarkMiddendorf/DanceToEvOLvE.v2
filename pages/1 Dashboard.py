@@ -23,6 +23,7 @@ def main():
     st.write("Session State Snapshot:", st.session_state)
     
     # Display view
+    df = st.session_state['df']
     df, display_toggle = apply_display_toggle(df)  # ✅ Actually renders the radio button and sets state
     #display_toggle = st.session_state.get("display_toggle")
     #st.session_state['display_toggle'] = display_toggle
