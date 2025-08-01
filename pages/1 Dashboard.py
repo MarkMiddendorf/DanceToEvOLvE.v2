@@ -22,8 +22,8 @@ def main():
     #st.write("Session State Snapshot:", st.session_state)
     
     # Display view
-    display_toggle = st.session_state["display_toggle"]
-    st.session_state['display_toggle'] = display_toggle
+    display_toggle = st.session_state.get("display_toggle")
+    #st.session_state['display_toggle'] = display_toggle
     st.header(display_toggle)
 
 
