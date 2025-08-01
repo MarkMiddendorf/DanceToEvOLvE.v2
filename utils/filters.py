@@ -24,10 +24,10 @@ def select_all_option_expander(label, options, sort_order=None):
     reset = st.session_state.get("reset_filters", False)
     select_all = st.session_state.get("select_all_filters", False)
 
-    if first_load or reset:
-        st.session_state[key] = []
-    elif select_all:
+    if first_load or select_all:
         st.session_state[key] = options
+    elif reset:
+        st.session_state[key] = []
     else:
         current = st.session_state.get(key, [])
         valid = [v for v in current if v in options]

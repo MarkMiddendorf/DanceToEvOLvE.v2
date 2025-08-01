@@ -69,9 +69,6 @@ with col2:
     if st.button("✅ Select All Filters"):
         st.session_state.select_all_filters = True
 
-
-
-
 # Display toggle
 df, display_toggle = apply_display_toggle(df)
 
@@ -87,5 +84,5 @@ st.session_state["select_all_filters"] = False
 filtered_df = get_filtered_df(df, selected_filters)
 
 st.session_state['filtered_df'] = filtered_df
-st.write("Session State Snapshot:", st.session_state)
+#st.write("Session State Snapshot:", st.session_state)
 

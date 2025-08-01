@@ -8,7 +8,7 @@ from utils.display import plot_individual_metric
 def main():
     apply_global_styles() 
     init_session_state()
-    st.write("Session State Snapshot:", st.session_state)
+   #st.write("Session State Snapshot:", st.session_state)
     # Display view
     display_toggle = st.session_state["display_toggle"]
     st.session_state['display_toggle'] = display_toggle
