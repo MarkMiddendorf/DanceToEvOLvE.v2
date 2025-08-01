@@ -90,6 +90,8 @@ def main():
                     # New if they missed at least 1 session
                     if session_index - last['session_index'] > 1:
                         is_new = True
+                    else:
+                        is_new = False
 
             if is_new:
                 newly_acquired.append({
