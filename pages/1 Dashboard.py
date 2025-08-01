@@ -131,13 +131,13 @@ def main():
         if display_toggle == "Session (Consecutive)":
             new_students_df = acquired_df.groupby(['School Year String', 'Session_Index']).agg({'DancerID': 'nunique','x_axisLabel':'first'}).reset_index()
             new_students_df.rename(columns={'DancerID': 'Number of New Students'}, inplace=True)
-            new_students_df = new_students_df.merge(unique_dancers_df,on='x_axisLabel', how='left')
+            new_students_df = new_students_df.merge(unique_dancers_df,on=['x_axisLabel','School Year String'], how='left')
             new_students_df['New Student %'] = (new_students_df['Number of New Students'] / new_students_df['Number of Unique Dancers'])*100
             num_new_students = new_students_df['Number of New Students'].sum()
         else:
             new_students_df = acquired_df.groupby(['School Year String', 'x_axisLabel']).agg({'DancerID': 'nunique'}).reset_index()
             new_students_df.rename(columns={'DancerID': 'Number of New Students'}, inplace=True)
-            new_students_df = new_students_df.merge(unique_dancers_df,on='x_axisLabel', how='left')
+            new_students_df = new_students_df.merge(unique_dancers_df,on=['x_axisLabel','School Year String'], how='left')
             new_students_df['New Student %'] = (new_students_df['Number of New Students'] / new_students_df['Number of Unique Dancers'])*100
             num_new_students = new_students_df['Number of New Students'].sum()
 
