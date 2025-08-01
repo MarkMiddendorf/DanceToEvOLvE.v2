@@ -6,6 +6,7 @@ from PIL import Image
 from utils.display import metric_card
 from utils.display import plot_individual_metric
 from utils.state import init_session_state
+from utils.display import apply_display_toggle
 
 
 logo = Image.open("assets/danceLogo.png")
@@ -22,7 +23,8 @@ def main():
     st.write("Session State Snapshot:", st.session_state)
     
     # Display view
-    display_toggle = st.session_state.get("display_toggle")
+    df, display_toggle = apply_display_toggle(df)  # ✅ Actually renders the radio button and sets state
+    #display_toggle = st.session_state.get("display_toggle")
     #st.session_state['display_toggle'] = display_toggle
     st.header(display_toggle)
 
