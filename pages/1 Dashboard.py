@@ -141,7 +141,7 @@ def main():
             new_students_df['New Student %'] = (new_students_df['Number of New Students'] / new_students_df['Number of Unique Dancers'])*100
             num_new_students = new_students_df['Number of New Students'].sum()
 
-        #st.write(new_students_df)
+        st.write(new_students_df)
 
         #st.write("Number of New Students: ", num_new_students)
 
