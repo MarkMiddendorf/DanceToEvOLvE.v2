@@ -67,6 +67,10 @@ def plot_grouped_metric(df, group_col, x_axis_label, metric, title, as_percentag
 def main():
     apply_global_styles()
     init_session_state()
+    st.write("Session State Snapshot:", st.session_state)
+
+    display_toggle = st.session_state["display_toggle"]
+    st.session_state['display_toggle'] = display_toggle
 
     st.title("🧺 Group By")
     display_toggleVar = st.radio("Display", options=["City", "Teacher", "Location", "Class", "Day","Time"], index=0)

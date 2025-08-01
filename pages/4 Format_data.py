@@ -10,6 +10,9 @@ import openpyxl
 def main():
     apply_global_styles()
     init_session_state()
+    st.write("Session State Snapshot:", st.session_state)
+    display_toggle = st.session_state["display_toggle"]
+    st.session_state['display_toggle'] = display_toggle
 
     st.title("🧹 Format Data")
     def extract_info_from_filename(filename):
