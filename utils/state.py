@@ -1,8 +1,8 @@
 import streamlit as st
 
 def init_session_state():
-    if "display_toggle" not in st.session_state:
-        st.session_state["display_toggle"] = "All Time"
+    #if "display_toggle" not in st.session_state:
+        #st.session_state["display_toggle"] = "All Time"
     
     default_keys = {
         "reset_filters": False,

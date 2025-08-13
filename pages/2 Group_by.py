@@ -5,6 +5,7 @@ from utils.styling import apply_global_styles
 from utils.state import init_session_state
 from utils.display import metric_card
 from utils.display import plot_individual_metric
+from utils.display import apply_display_toggle
 
 def calculate_grouped_metrics(filtered_df, acquired_df, group_col):
     grouped_df = filtered_df.groupby([group_col, 'x_axisLabel', 'Sort_Key']).agg({
@@ -22,14 +23,18 @@ def calculate_grouped_metrics(filtered_df, acquired_df, group_col):
 
     new_students_df = acquired_df.groupby([group_col, 'x_axisLabel']).agg({'DancerID': 'nunique'}).reset_index()
     new_students_df.rename(columns={'DancerID': 'Number of New Students'}, inplace=True)
+    st.write(new_students_df)
 
     grouped_df = grouped_df.merge(new_students_df, on=[group_col, 'x_axisLabel'], how='left')
     grouped_df['Number of New Students'] = grouped_df['Number of New Students'].fillna(0)
+    st.write(grouped_df)
 
     grouped_df['Enrollment %'] = grouped_df['Number of Dancers'] / grouped_df['Number of Classes']
     grouped_df['New Student %'] = grouped_df['Number of New Students'] / grouped_df['Number of Unique Dancers']
     grouped_df['Retained Students'] = grouped_df['Number of Unique Dancers'] - grouped_df['Number of New Students']
     grouped_df['Retention %'] = grouped_df['Retained Students'] / grouped_df['Number of Unique Dancers']
+
+    st.write(grouped_df)
 
     return grouped_df
 
@@ -69,16 +74,19 @@ def main():
     init_session_state()
     #st.write("Session State Snapshot:", st.session_state)
 
-    display_toggle = st.session_state["display_toggle"]
-    st.session_state['display_toggle'] = display_toggle
+    filtered_df = st.session_state['filtered_df']
 
     st.title("🧺 Group By")
-    display_toggleVar = st.radio("Display", options=["City", "Teacher", "Location", "Class", "Day","Time"], index=0)
+    col1, col2 = st.columns(2)
+    with col1:
+        filtered_df, display_toggle = apply_display_toggle(filtered_df) 
+    with col2:
+        display_toggleVar = st.radio("GroupBy", options=["City", "Teacher", "Location", "Class", "Day","Time"], index=0)
     group_col = display_toggleVar
 
     if 'filtered_df' in st.session_state:
-        filtered_df = st.session_state['filtered_df']
-        filtered_pool = filtered_df.sort_values('Sort_Key')
+        g_df = st.session_state['df']
+        filtered_pool = g_df.sort_values('Sort_Key')
         last_seen = {}
         newly_acquired = []
 
@@ -87,7 +95,34 @@ def main():
             session_index = row['Session_Index']
             school_year = row['School Year']
 
-            if dancer_id not in last_seen or last_seen[dancer_id]['school_year'] != school_year:
+            is_new = False
+            if dancer_id not in last_seen:
+                is_new = True
+            else:
+                last = last_seen[dancer_id]
+
+                if display_toggle == "All Time":
+                    # If they were never seen before = new
+                    if last is None:
+                        is_new = True
+                    else:
+                        is_new = False
+
+                elif display_toggle == "Intra Year":
+                    # Only count the first time in current year
+                    if last['school_year'] != school_year:
+                        is_new = True
+                    else:
+                        is_new = False  # already seen in current year
+
+                elif display_toggle == "Session (Consecutive)":
+                    # New if they missed at least 1 session
+                    if session_index - last['session_index'] > 1:
+                        is_new = True
+                    else:
+                        is_new = False
+
+            if is_new: #or last_seen[dancer_id]['school_year'] != school_year:
                 newly_acquired.append({
                     group_col: row[group_col],
                     'x_axisLabel': row['x_axisLabel'],
@@ -102,6 +137,7 @@ def main():
             }
 
         acquired_df = pd.DataFrame(newly_acquired)
+        st.write(acquired_df)
         grouped_df = calculate_grouped_metrics(filtered_df, acquired_df, group_col)
 
         total_dancers = grouped_df['Number of Dancers'].sum()
