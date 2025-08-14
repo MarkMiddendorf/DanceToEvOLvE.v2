@@ -10,8 +10,6 @@ def main():
     init_session_state()
     #st.write("Session State Snapshot:", st.session_state)
     st.title("🔢 Ages")
-    display_toggle = st.session_state["display_toggle"]
-    st.session_state['display_toggle'] = display_toggle
 
     if 'df' not in st.session_state:
         st.error("Master dataframe not loaded. Please return to Main page first.")
