@@ -37,7 +37,7 @@ def main():
         st.header(display_toggle)
         df = st.session_state['df']
 
-        #st.write(filtered_df)  # or use it in charts, logic, etc.
+        st.write("Filtered Dataframe:", filtered_df)  # or use it in charts, logic, etc.
 
         # Total Enrollment (head count) -> filtered dataframe count
         grouped_df = filtered_df.groupby('x_axisLabel').agg({'DancerID': 'count'}).reset_index()
@@ -45,7 +45,6 @@ def main():
         grouped_df = grouped_df.merge(filtered_df[['x_axisLabel', 'Sort_Key']].drop_duplicates(), on='x_axisLabel')
         grouped_df = grouped_df.sort_values('Sort_Key')
         total_dancers = grouped_df['Number of Dancers'].sum()
-
         #st.write("Total Dancers: ", total_dancers)
 
         # Unique Students (unique head count) -> filtered dataframe unique count
@@ -125,7 +124,7 @@ def main():
 
         # 3. After loop: create DataFrame
         acquired_df = pd.DataFrame(newly_acquired)
-        #st.write("AquiredDF: ", acquired_df)
+        st.write("AquiredDF: ", acquired_df)
 
         # 4. Count new students
         if display_toggle == "Session (Consecutive)":
@@ -159,7 +158,7 @@ def main():
         # Sort the DataFrame based on Sort_Key for proper session ordering
         #retention_df = retention_df.merge(df[['x_axisLabel', 'Sort_Key']].drop_duplicates(), on='x_axisLabel')
         retention_df = retention_df.sort_values('Sort_Key')
-        #st.write(retention_df)
+        st.write("Retention DF: ", retention_df)
 
         # ---- Metric Cards ----
         # 1. Number of classes by source
