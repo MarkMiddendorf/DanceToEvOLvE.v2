@@ -47,7 +47,6 @@ def main():
                 year = int(info["Year"]) if info["Year"].isdigit() else None
 
                 df = pd.read_excel(file_buffer)
-                print(df.head(15))
 
                 
                 for index, row in df.iterrows():
@@ -102,6 +101,7 @@ def main():
 
         if st.button("Process Files"):
             if uploaded_files:
+                print(uploaded_files)
                 consolidated_df = process_files(uploaded_files)
                 if not consolidated_df.empty:
                     st.success("Files processed successfully!")
