@@ -16,6 +16,7 @@ def main():
     def extract_info_from_filename(filename):
         file_name = os.path.basename(filename)
         parts = os.path.splitext(file_name)[0].split('_')
+        st.write(filename)
         
         # Ensure the parts list has at least 7 elements, filling missing values with "N/A"
         while len(parts) < 9:
