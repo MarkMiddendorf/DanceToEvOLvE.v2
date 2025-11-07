@@ -42,6 +42,7 @@ def main():
         for file_buffer in file_buffers:
             try:
                 info = extract_info_from_filename(file_buffer.name)
+                st.write(info)
 
                 session = int(info["Session"]) if info["Session"].isdigit() else None
                 year = int(info["Year"]) if info["Year"].isdigit() else None
