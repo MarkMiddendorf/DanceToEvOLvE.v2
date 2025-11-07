@@ -101,7 +101,7 @@ def main():
 
         if st.button("Process Files"):
             if uploaded_files:
-                print(uploaded_files)
+                st.write(uploaded_files)
                 consolidated_df = process_files(uploaded_files)
                 if not consolidated_df.empty:
                     st.success("Files processed successfully!")
