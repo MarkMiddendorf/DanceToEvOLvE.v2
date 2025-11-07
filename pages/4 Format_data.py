@@ -47,6 +47,8 @@ def main():
                 year = int(info["Year"]) if info["Year"].isdigit() else None
 
                 df = pd.read_excel(file_buffer)
+                print(df.head(15))
+
                 
                 for index, row in df.iterrows():
                     cleaned_last_name = clean_last_name(row['Last Name'])
